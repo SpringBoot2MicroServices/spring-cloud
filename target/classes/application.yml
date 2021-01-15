@@ -1,0 +1,37 @@
+server:
+  port: 2023
+
+spring:
+  application:
+    name: API-GATEWAY-SERVICE
+
+  cloud:
+    gateway:
+      routes:
+        - id: order_service_route
+          uri: lb://ORDER-SERVICE
+          predicates:
+            - Path=/order/**
+        - id: payment_service_route
+          uri: lb://PAYMENT-SERVICE
+          predicates:
+            - Path=/payment/**
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    hostname: localhost
+
+logging:
+  level:
+    org.springframework.cloud.gateway: TRACE
+    org.springframework.http.server.reactive: DEBUG
+    org.springframework.web.reactive: DEBUG
+    reactor.ipc.netty: DEBUG
+    reactor.netty: DEBUG
+
+management.endpoints.web.exposure.include: '*'
